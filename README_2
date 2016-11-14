@@ -1,0 +1,15 @@
+This document will explain the role of the different files
+
+- creation_graphe.py: will allow us to define a specific graph, we will use this one for our first measures 
+of the centrality of the different vertices
+
+- second_order_centrality.py will perform thoses measures on every vertice of this 10_vertice graph
+
+
+IMPORTANT NOTE: The algorithm is based on the following scientific paper. Nevertheless, in the formula of Sigma_i(N) 
+we have replaced N-1 by N under the square root.
+
+Anne-Marie Kermarrec, Erwan Le Merrer, Bruno Sericola, Gilles Tredan. Centralite du sec-
+ond ordre : Calcul distribue de l'importance de noeuds. Chaintreau, Augustin and Magnien,
+Clemence. AlgoTel, 2009, Carry-Le-Rouet, France. 2009. <inria-00384426>
+
