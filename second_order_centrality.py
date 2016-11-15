@@ -69,11 +69,11 @@ def second_order_centrality(graphe,N):
                 visited[random_walk_loc]=iter
             else:
                 # how many times did we visit the vertice n°i
-                epsilon[random_walk_loc] = epsilon[random_walk_loc] + [iter-visited[random_walk_loc]]
+                epsilon[random_walk_loc] += [iter-visited[random_walk_loc]]
                 #print("ce n'est pas ma première visite ici")
                 #print(("voici les temps de retour calculés"),epsilon[random_walk_pos])
                 if len(epsilon[random_walk_loc])>3:
-                    sigma[random_walk_loc] = sigma[random_walk_loc] + [sigma_i(epsilon[random_walk_loc],len(epsilon[random_walk_loc]))]
+                    sigma[random_walk_loc] += [sigma_i(epsilon[random_walk_loc],len(epsilon[random_walk_loc]))]
 
     return epsilon,sigma
 
