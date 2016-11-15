@@ -45,7 +45,7 @@ def second_order_centrality(graphe,N):
         else:
             iter += 1
             #print("----- nouvelle entrée dans la boucle")
-            surrounding=neig(graphe,random_walk_pos)
+            surrounding=neighbor(graphe,random_walk_pos)
             #print(("je suis situé en"),random_walk_pos)
             #print("")
             #print(("les voisins sont "),surrounding)
