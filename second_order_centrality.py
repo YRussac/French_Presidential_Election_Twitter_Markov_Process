@@ -1,10 +1,12 @@
 import creation_graphe as ini
 from random import randint
-from random import uniform
+from random import uniform, seed
 from math import *
 
-B = ini.init_graph()
+# For reproductivity
+seed(42)
 
+B = ini.init_graph()
 
 def neighbors(graph, i):
     """
@@ -39,8 +41,9 @@ def second_order_centrality(graph, N):
     # Initial node
     random_walk_loc = randint(0, graph_order - 1)
 
+
     # sera rempli par le temps de première viste
-    visited = [[-1]] * graph_order
+    visited = [-1] * graph_order
 
     epsilon = [[]] * graph_order
 
@@ -48,17 +51,17 @@ def second_order_centrality(graph, N):
 
     iteration = 0
 
-    while length_epsilon(epsilon, N) == False:
+    while not length_epsilon(epsilon, N):
         # print("nouvelle entrée dans la boucle")
-
         if visited[random_walk_loc] == -1:
             # print("je reste à l'ancienne position")
             # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
             visited[random_walk_loc] = iteration
         else:
-            # how many times did we visit the vertice n°i
-            epsilon[random_walk_loc] += [iteration - visited[random_walk_loc][-1]]
-            visited[random_walk_loc] += [iteration]
+
+            epsilon[random_walk_loc] = epsilon[random_walk_loc] + [iteration - visited[random_walk_loc]]
+
+            visited[random_walk_loc] = iteration
             # print("ce n'est pas ma premiere visite ici")
 
             if len(epsilon[random_walk_loc]) > 2:
@@ -87,8 +90,6 @@ def second_order_centrality(graph, N):
     return epsilon, sigma
 
 
-print(second_order_centrality(B, 4))
+eps, s = second_order_centrality(B, 10000)
 
-
-
-
+print(eps)
