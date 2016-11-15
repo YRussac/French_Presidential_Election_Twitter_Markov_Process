@@ -45,9 +45,7 @@ def second_order_centrality(graph, N):
     sigma = [[]] * graph_order
 
     iteration = 0
-
-    cont = True
-
+    
     while length_epsilon(epsilon, N) == False:
         # print("nouvelle entrée dans la boucle")
         iteration += 1
