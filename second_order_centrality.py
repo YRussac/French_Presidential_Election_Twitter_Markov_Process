@@ -16,12 +16,11 @@ def neighbors(graph, i):
 
 
 def length_epsilon(lofl, N):
-    n = len(lofl)
     res = True
-    for i in range(0, n):
+    for i in range(0, len(lofl)):
         if len(lofl[i]) < N:
-            cont = False
             res = False
+            break
     return res
 
 
