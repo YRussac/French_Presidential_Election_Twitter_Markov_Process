@@ -49,12 +49,12 @@ def second_order_centrality(graph,N):
         else:
             iter += 1
             #print("----- nouvelle entrée dans la boucle")
-            surrounding=neighbor(graphe,random_walk_loc)
+            surrounding=neighbor(graph,random_walk_loc)
             #print(("je suis situé en"),random_walk_pos)
             #print("")
             #print(("les voisins sont "),surrounding)
             next_loc = surrounding[randint(0,len(surrounding)-1)]
-            d_j = len(neighbor(graphe,next_loc))
+            d_j = len(neighbor(graph,next_loc))
             d_i = len(surrounding)
             p = uniform(0,1)
             if p<=d_i/d_j:
