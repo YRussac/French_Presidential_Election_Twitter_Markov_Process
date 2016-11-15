@@ -11,8 +11,8 @@ def neighbors(graph, i):
     This function takes the adjacency matrix of a network graph and a node as input
     Returns a list containing the nodes that a linked to the input node.
     """
-    res = [j for j in range(0, graph.shape[0]) if graph[i][j] == 1]
-    return res
+    ngbs = [j for j in range(0, graph.shape[0]) if graph[i][j] == 1]
+    return ngbs
 
 
 def length_epsilon(lofl, n):
@@ -24,9 +24,10 @@ def length_epsilon(lofl, n):
     return res
 
 
-def sigma_i(l, n):
-    sum1 = sum([l[i] ** 2 for i in range(n)])
-    sum2 = sum([l[i] for i in range(n)])
+def sigma_i(epsilon):
+    n = len(epsilon)
+    sum1 = sum([epsilon[i] ** 2 for i in range(n)])
+    sum2 = sum([epsilon[i] for i in range(n)])
 
     return sqrt(1 / n * sum1 - (1 / n * sum2) ** 2)
 
@@ -38,17 +39,17 @@ def second_order_centrality(graph, N):
     # Initial node
     random_walk_loc = randint(0, graph_order - 1)
 
-    visited = [-1] * graph_order
+    # sera rempli par le temps de première viste
+    visited = [[-1]] * graph_order
 
     epsilon = [[]] * graph_order
 
     sigma = [[]] * graph_order
 
     iteration = 0
-    
+
     while length_epsilon(epsilon, N) == False:
         # print("nouvelle entrée dans la boucle")
-        iteration += 1
 
         if visited[random_walk_loc] == -1:
             # print("je reste à l'ancienne position")
@@ -56,14 +57,15 @@ def second_order_centrality(graph, N):
             visited[random_walk_loc] = iteration
         else:
             # how many times did we visit the vertice n°i
-            epsilon[random_walk_loc] += [iteration - visited[random_walk_loc]]
+            epsilon[random_walk_loc] += [iteration - visited[random_walk_loc][-1]]
+            visited[random_walk_loc] += [iteration]
             # print("ce n'est pas ma premiere visite ici")
 
-            if len(epsilon[random_walk_loc]) > 3:
-                sigma[random_walk_loc] = [sigma_i(epsilon[random_walk_loc], len(epsilon[random_walk_loc]))]
+            if len(epsilon[random_walk_loc]) > 2:
+                sigma[random_walk_loc] += [sigma_i(epsilon[random_walk_loc])]
 
 
-            # Neighbors of actual location node
+                # Neighbors of actual location node
         ngbs = neighbors(graph, random_walk_loc)
 
         # Next location chosen randomly
@@ -80,6 +82,7 @@ def second_order_centrality(graph, N):
             # Staying on actual location
             pass
 
+        iteration += 1
 
     return epsilon, sigma
 
