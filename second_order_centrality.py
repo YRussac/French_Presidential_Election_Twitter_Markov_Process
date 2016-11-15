@@ -10,7 +10,7 @@ def neighbor(graph,i):
     This function takes the adjacency matrix of a network graph and a node as input
     Returns a list containing the nodes that a linked to the input node.
     """
-    res = [j for j in range(0,graph.shape[0]) if graphe[i][j]==1]
+    res = [j for j in range(0,graph.shape[0]) if graph[i][j]==1]
     return res
 
 def length_epsilon(lofl,N):
@@ -30,8 +30,8 @@ def sigma_i(l,n):
 
 
 # the following algorithm allows me to
-def second_order_centrality(graphe,N):
-    graph_order = graphe.shape[0]
+def second_order_centrality(graph,N):
+    graph_order = graph.shape[0]
     random_walk_loc = randint(0,graph_order-1)
     #print((" Noeud initial"),random_walk_pos)
 
