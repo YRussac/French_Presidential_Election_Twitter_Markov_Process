@@ -5,8 +5,12 @@ from math import *
 
 B = ini.init_graph()
 
-def neighbor(graphe,i):
-    res = [j for j in range(0,len(graphe[0])) if graphe[i][j]==1]
+def neighbor(graph,i):
+    """
+    This function takes the adjacency matrix of a network graph and a node as input
+    Returns a list containing the nodes that a linked to the input node.
+    """
+    res = [j for j in range(0,graph.shape[0]) if graphe[i][j]==1]
     return res
 
 def length_epsilon(lofl,N):
@@ -71,7 +75,7 @@ def second_order_centrality(graphe,N):
                 if len(epsilon[random_walk_pos])>3:
                     sigma[random_walk_pos]=sigma[random_walk_pos]+[sigma_i(epsilon[random_walk_pos],len(epsilon[random_walk_pos]))]
 
-    return((epsilon),sigma)
+    return epsilon,sigma
 
 
 
