@@ -1,99 +1,97 @@
 import creation_graphe as ini
 from random import randint
-from random import uniform
+from random import uniform, seed
 from math import *
+import matplotlib.pyplot as plt
+import numpy as np
 
-B=ini.init_graph()
+# Pour pouvoir répéter la même expérience aléatoire
 
-def voisin(graphe,i):
-    n=len(graphe[0])
-    res=[]
-    for j in range(0,n):
-        if graphe[i][j]==1:
-            res=res+[j]
-    return(res)
+seed(42)
 
-def length_epsilon(lofl,N):
-    n=len(lofl)
-    res= True
-    for i in range(0,n):
-        if len(lofl[i])<N:
-            cont=False
-            res=False
-    return(res)
+B = ini.init_graph()
 
-def sigma_i(l,n):
-    sum1=0
-    for i in range(0,n):
-        sum1=sum1+l[i]*l[i]
-    sum2=0
-    for i in range(0,n):
-        sum2=sum2+l[i]
-    return(sqrt(1/(n)*sum1-(1/(n)*sum2)**2))
+print(B)
 
+def neighbors(graph, i):
+    """
+    This function takes the adjacency matrix of a network graph and a node as input
+    Returns a list containing the nodes that a linked to the input node.
+    """
+    ngbs = [j for j in range(0, graph.shape[0]) if graph[i][j] == 1]
+    return ngbs
+
+
+def length_epsilon(lofl, n):
+    res = True
+    for i in range(0, len(lofl)):
+        if len(lofl[i]) < n:
+            res = False
+            break
+    return res
 
 # the following algorithm allows me to
-def second_order_centrality(graphe,N):
-    card_vertices=len(graphe[0])
-    random_walk_pos=randint(0,card_vertices-1)
-    #print((" Noeud initial"),random_walk_pos)
+def second_order_centrality(graph, N):
+    graph_order = graph.shape[0]
 
-    visited=[-1]*card_vertices
-    epsilon=[[]]*card_vertices
-    sigma=[[]]*card_vertices
-    iter=0
-    cont=True
-    while cont==True:
+    # Initial node
+    random_walk_loc = randint(0, graph_order - 1)
 
-        if length_epsilon(epsilon,N)==True:
-            cont=False
-            #print(iter)
-            #print(("first time in this vertice"),visited)
+
+    # sera rempli par le temps de première viste
+    visited = [-1] * graph_order
+
+    epsilon = [[]] * graph_order
+
+    sigma = [[]] * graph_order
+
+    iteration = 0
+
+    same_loc = False
+
+    while not length_epsilon(epsilon, N):
+        if not same_loc:
+            # print("nouvelle entrée dans la boucle")
+            if visited[random_walk_loc] == -1:
+                # print("je reste à l'ancienne position")
+                # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
+                visited[random_walk_loc] = iteration
+            else:
+                epsilon[random_walk_loc] = epsilon[random_walk_loc] + [iteration - visited[random_walk_loc]]
+                visited[random_walk_loc] = iteration
+                # print("ce n'est pas ma premiere visite ici")
+
+                if len(epsilon[random_walk_loc]) > 2:
+                    sigma[random_walk_loc] = sigma[random_walk_loc] + [np.std(epsilon[random_walk_loc])]
+        # Neighbors of actual location node
+        ngbs = neighbors(graph, random_walk_loc)
+
+        # Next location chosen randomly
+        next_loc = ngbs[randint(0, len(ngbs) - 1)]
+
+        d_j = len(neighbors(graph, next_loc))
+        d_i = len(ngbs)
+        p = uniform(0, 1)
+
+        if p <= d_i / d_j:
+            # Moving onto next location
+            random_walk_loc = next_loc
+            same_loc = False
         else:
-            iter=iter+1
-            #print("----- nouvelle entrée dans la boucle")
-            surrounding=voisin(graphe,random_walk_pos)
-            #print(("je suis situé en"),random_walk_pos)
-            #print("")
-            #print(("les voisins sont "),surrounding)
-            next_pos=surrounding[randint(0,len(surrounding)-1)]
-            d_j=len(voisin(graphe,next_pos))
-            d_i=len(surrounding)
-            p=uniform(0,1)
-            if p<=d_i/d_j:
-                #print(("deplacement vers",next_pos))
-                random_walk_pos=next_pos
-            else:
-                pass
+            same_loc = True
 
-            if visited[random_walk_pos]==-1:
-                #print("je reste à l'ancienne position")
-                #print(("detection d'un point jamais encore visite, première visite en t="),iter)
-                visited[random_walk_pos]=iter
-            else:
-                # how many times did we visit the vertice n°i
-                epsilon[random_walk_pos]=epsilon[random_walk_pos]+[iter-visited[random_walk_pos]]
-                #print("ce n'est pas ma première visite ici")
-                #print(("voici les temps de retour calculés"),epsilon[random_walk_pos])
-                if len(epsilon[random_walk_pos])>3:
-                    sigma[random_walk_pos]=sigma[random_walk_pos]+[sigma_i(epsilon[random_walk_pos],len(epsilon[random_walk_pos]))]
+        iteration += 1
+
+    return epsilon, sigma
 
 
+eps, s = second_order_centrality(B, 1000)
 
 
+x = [i for i in range(len(s[0]))]
 
-    return((epsilon),sigma)
+print('Plotting')
 
-
-
-
-
-print(second_order_centrality(B,3))
-
-
-
-
-
-
-
+plt.plot(x, s[0])
+plt.show()
 
