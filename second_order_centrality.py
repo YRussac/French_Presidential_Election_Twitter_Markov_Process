@@ -2,8 +2,10 @@ import creation_graphe as ini
 from random import randint
 from random import uniform, seed
 from math import *
+import matplotlib.pyplot as plt
 
-# For reproductivity
+# Pour pouvoir répéter la même expérience aléatoire
+
 seed(42)
 
 B = ini.init_graph()
@@ -51,24 +53,27 @@ def second_order_centrality(graph, N):
 
     iteration = 0
 
+    same_loc = False
+
     while not length_epsilon(epsilon, N):
-        # print("nouvelle entrée dans la boucle")
-        if visited[random_walk_loc] == -1:
-            # print("je reste à l'ancienne position")
-            # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
-            visited[random_walk_loc] = iteration
-        else:
+        if not same_loc:
+            # print("nouvelle entrée dans la boucle")
+            if visited[random_walk_loc] == -1:
+                # print("je reste à l'ancienne position")
+                # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
+                visited[random_walk_loc] = iteration
+            else:
 
-            epsilon[random_walk_loc] = epsilon[random_walk_loc] + [iteration - visited[random_walk_loc]]
+                epsilon[random_walk_loc] = epsilon[random_walk_loc] + [iteration - visited[random_walk_loc]]
 
-            visited[random_walk_loc] = iteration
-            # print("ce n'est pas ma premiere visite ici")
+                visited[random_walk_loc] = iteration
+                # print("ce n'est pas ma premiere visite ici")
 
-            if len(epsilon[random_walk_loc]) > 2:
-                sigma[random_walk_loc] += [sigma_i(epsilon[random_walk_loc])]
+                if len(epsilon[random_walk_loc]) > 2:
+                    sigma[random_walk_loc] += [sigma_i(epsilon[random_walk_loc])]
 
 
-                # Neighbors of actual location node
+        # Neighbors of actual location node
         ngbs = neighbors(graph, random_walk_loc)
 
         # Next location chosen randomly
@@ -81,15 +86,22 @@ def second_order_centrality(graph, N):
         if p <= d_i / d_j:
             # Moving onto next location
             random_walk_loc = next_loc
+            same_loc = False
         else:
-            # Staying on actual location
-            pass
+            same_loc = True
 
         iteration += 1
 
     return epsilon, sigma
 
 
-eps, s = second_order_centrality(B, 10000)
+eps, s = second_order_centrality(B, 1000)
 
-print(eps)
+print(s[0])
+
+x = [i for i in range(len(s[0]))]
+
+print('Plotting')
+
+plt.plot(x, s[1])
+plt.show()
