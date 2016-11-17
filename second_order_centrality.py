@@ -3,12 +3,15 @@ from random import randint
 from random import uniform, seed
 from math import *
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Pour pouvoir répéter la même expérience aléatoire
 
 seed(42)
 
 B = ini.init_graph()
+
+print(B)
 
 def neighbors(graph, i):
     """
@@ -26,15 +29,6 @@ def length_epsilon(lofl, n):
             res = False
             break
     return res
-
-
-def sigma_i(epsilon):
-    n = len(epsilon)
-    sum1 = sum([epsilon[i] ** 2 for i in range(n)])
-    sum2 = sum([epsilon[i] for i in range(n)])
-
-    return sqrt(1 / n * sum1 - (1 / n * sum2) ** 2)
-
 
 # the following algorithm allows me to
 def second_order_centrality(graph, N):
@@ -63,16 +57,12 @@ def second_order_centrality(graph, N):
                 # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
                 visited[random_walk_loc] = iteration
             else:
-
                 epsilon[random_walk_loc] = epsilon[random_walk_loc] + [iteration - visited[random_walk_loc]]
-
                 visited[random_walk_loc] = iteration
                 # print("ce n'est pas ma premiere visite ici")
 
                 if len(epsilon[random_walk_loc]) > 2:
-                    sigma[random_walk_loc] += [sigma_i(epsilon[random_walk_loc])]
-
-
+                    sigma[random_walk_loc] = sigma[random_walk_loc] + [np.std(epsilon[random_walk_loc])]
         # Neighbors of actual location node
         ngbs = neighbors(graph, random_walk_loc)
 
@@ -97,11 +87,11 @@ def second_order_centrality(graph, N):
 
 eps, s = second_order_centrality(B, 1000)
 
-print(s[0])
 
 x = [i for i in range(len(s[0]))]
 
 print('Plotting')
 
-plt.plot(x, s[1])
+plt.plot(x, s[0])
 plt.show()
+
