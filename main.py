@@ -6,7 +6,6 @@ from functions import *
 G = nx.karate_club_graph()
 B = nx.adjacency_matrix(G).toarray()
 
-
 tm = transition_mat(B)
 theoretical_values = theoretical_second_order_centrality(tm)
 
