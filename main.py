@@ -21,7 +21,7 @@ eps, m, s = graph_centrality(B, n)
 colors_m = [l[-1] for l in m]
 colors_s = [l[-1] for l in s]
 
-#nx.draw_networkx(G, node_color=colors_m, alpha=0.5, cmap=plt.get_cmap('bwr'))
+# nx.draw_networkx(G, node_color=colors_m, alpha=0.5, cmap=plt.get_cmap('bwr'))
 nx.draw_networkx(G, node_color=colors_s, alpha=0.5, cmap=plt.get_cmap('bwr'))
 
 
