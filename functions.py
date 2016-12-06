@@ -16,7 +16,8 @@ def neighbors(graph, i):
 def length_list_of_list(list_of_list, n):
     """
     This function takes a list of lists as an input
-    Returns a bool, the result will be true if and only if the size of each of lists is greater or equal than n the second parameter
+    Returns a bool, the result will be true if and only if the size of each of lists is greater or
+    equal than n the second parameter
     """
     res = True
     for i in range(0, len(list_of_list)):
