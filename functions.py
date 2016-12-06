@@ -8,6 +8,7 @@ def neighbors(graph, i):
     """
     This function takes the adjacency matrix of a network graph and a node as input
     Returns a list containing the nodes that a linked to the input node.
+
     """
     ngbs = [j for j in range(0, graph.shape[0]) if graph[i][j] == 1]
     return ngbs
