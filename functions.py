@@ -1,4 +1,3 @@
-
 from random import randint
 from random import uniform, seed
 import numpy as np
@@ -8,38 +7,27 @@ def neighbors(graph, i):
     """
     This function takes the adjacency matrix of a network graph and a node as input
     Returns a list containing the nodes that a linked to the input node.
-
     """
     ngbs = [j for j in range(0, graph.shape[0]) if graph[i][j] == 1]
     return ngbs
 
 
-def length_list_of_list(list_of_list, n):
-    """
-    This function takes a list of lists as an input
-    Returns a bool, the result will be true if and only if the size of each of lists is greater or
-    equal than n the second parameter
-    """
+def length_epsilon(lofl, n):
     res = True
-    for i in range(0, len(list_of_list)):
-        if len(list_of_list[i]) < n:
+    for i in range(0, len(lofl)):
+        if len(lofl[i]) < n:
             res = False
             break
     return res
 
 
 def graph_centrality(graph, N):
-    """
-    This function take the adjency matrix of a graph and a size N as input.
-    N is linked with the minimum number of times we want to return to every single vertices
-    For example if N=10 at the end of the algorithm, we will have at least 10 return times for each vertice
-    """
     graph_order = graph.shape[0]
 
     # Initial node
-    random_walk_loc = randint(0, graph_order - 1)  # we randomly choose the vertice where the random walk starts
+    random_walk_loc = randint(0, graph_order - 1)
 
-    # will be filled with the first visit time
+    # sera rempli par le temps de première viste
     last_time_visited = [-1] * graph_order
 
     epsilon = [[]] * graph_order
@@ -52,20 +40,19 @@ def graph_centrality(graph, N):
 
     same_loc = False
 
-    while not length_list_of_list(epsilon, N): # we must have at least N times of return for each vertices
+    while not length_epsilon(epsilon, N):
         if not same_loc:
-
-            if last_time_visited[random_walk_loc] == -1:  # first time we visit this specific node
-
-                # print(("detection of an unvisited point, first visit for t="),iteration)
+            # print("Nouvelle entrée dans la boucle")
+            if last_time_visited[random_walk_loc] == -1:
+                # print("je reste à l'ancienne position")
+                # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
                 last_time_visited[random_walk_loc] = iteration
                 epsilon[random_walk_loc], sigma[random_walk_loc], mu[random_walk_loc] = [], [], []
 
             else:
                 epsilon[random_walk_loc].append(iteration - last_time_visited[random_walk_loc])
-                # we had the new return time to the list for the node where we currently are
                 last_time_visited[random_walk_loc] = iteration
-                # print("Not our first visit on this vertice")
+                # print("ce n'est pas ma premiere visite ici")
 
                 if len(epsilon[random_walk_loc]) > 2:
                     # We add one degree of freedom (ddof=1) to get the unbiased standard error
@@ -80,8 +67,6 @@ def graph_centrality(graph, N):
 
         d_j = len(neighbors(graph, next_loc))
         d_i = len(ngbs)
-        # d_i is the degree of the current vertice
-        # d_j is the degree of the eventual following vertice for our random walk
         p = uniform(0, 1)
 
         if p <= d_i / d_j:
