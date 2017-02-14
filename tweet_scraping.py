@@ -26,6 +26,7 @@ hashtag_list = ["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#JLM201
 # we'll save it in a dataframe
 
 for hashtag in hashtag_list:
+
     print(hashtag)
 
     # To handle "Too many requests" error
