@@ -119,7 +119,6 @@ class StdOutListener(StreamListener):
         print("ZZZZZZZZZZZZZZZZZZZZZZZ")
 
 if __name__ == '__main__':
-
     #This handles Twitter authetification and the connection to Twitter Streaming API
     l = StdOutListener(start_time,time_limit=10)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
