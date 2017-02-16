@@ -20,12 +20,12 @@ def user_information(user_id, number_of_tweets=200):
     user = api.get_user(user_id)
 
     d_json = {"screen_name": user.screen_name,  "followers_count": user.followers_count,
-              "friends_count": user.friends_count, "tweets": []}
+              "friends_count": user.friends_count, "user_location": user.location, "tweets": []}
 
     statuses = api.user_timeline(user_id, count=number_of_tweets)
 
     for tweet in statuses:
-        d_tweet = {"tweet_id": tweet.id_str, "text": tweet.text, "geo": tweet.geo,
+        d_tweet = {"tweet_id": tweet.id_str, "text": tweet.text, "tweet_geo": tweet.geo,
                    "hashtags": tweet.entities["hashtags"], "user_mentions": tweet.entities["user_mentions"],
                    "date": tweet.created_at}
         d_json["tweets"].append(d_tweet)
@@ -43,11 +43,12 @@ class StdOutListener(StreamListener):
         self.tweet_data = []
 
     def on_data(self, data):
+
         decoded = json.loads(data)
 
         user_id = decoded["user"]["id_str"]
 
-        if user_id not in observed_users:
+        if user_id not in observed_users.keys():
             # New user
             # We add the information for this unobserved user
             too_many_requests = True
