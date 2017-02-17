@@ -20,7 +20,7 @@ def user_information(user_id, number_of_tweets=200):
     user = api.get_user(user_id)
 
     d_json = {"screen_name": user.screen_name,  "followers_count": user.followers_count,
-              "friends_count": user.friends_count, "user_location": user.location, "tweets": []}
+              "friends_count": user.friends_count, "user_location": user.location, "tweets": [], "id": user_id}
 
     statuses = api.user_timeline(user_id, count=number_of_tweets)
 
@@ -54,7 +54,7 @@ class StdOutListener(StreamListener):
             too_many_requests = True
             while too_many_requests:
                 try:
-                    user_information(user_id, 50)
+                    user_information(user_id, 200)
                     observed_users[user_id] = 1
                     too_many_requests = False
                 except:
@@ -69,13 +69,14 @@ class StdOutListener(StreamListener):
         return True
 
     def on_error(self, status):
-        print("Error !")
+        pass
+        # print("Error !")
 
 if __name__ == '__main__':
 
     observed_users = {}
-
-    l = StdOutListener(time_limit=300)
+    # The program will run for 24 hours
+    l = StdOutListener(time_limit=86400)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)
