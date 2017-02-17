@@ -18,6 +18,8 @@ auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 
+
+
 def user_information(user_id, number_of_tweets=200):
     user = api.get_user(user_id)
 
@@ -27,8 +29,10 @@ def user_information(user_id, number_of_tweets=200):
     statuses = api.user_timeline(user_id, count=number_of_tweets)
 
     for tweet in statuses:
+
         d_tweet = {"tweet_id": tweet.id_str, "text": tweet.text, "tweet_geo": tweet.geo,
-                   "hashtags": tweet.entities["hashtags"], "user_mentions": tweet.entities["user_mentions"],
+                   "hashtags": [hashtag['text'] for hashtag in tweet.entities["hashtags"]],
+                   "user_mentions": [user_mention['id_str'] for user_mention in tweet.entities["user_mentions"]],
                    "date": tweet.created_at}
         d_json["tweets"].append(d_tweet)
 
@@ -86,5 +90,8 @@ if __name__ == '__main__':
     # This line filter Twitter Streams to capture data by the hashtags of the french candidates for
     # the presidential election
 
-    stream.filter(track=["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#JLM2017", "#NDA2017", "#Jadot2017"])
-
+    while True:
+        try:
+            stream.filter(track=["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#JLM2017", "#NDA2017", "#Jadot2017"])
+        except AttributeError:
+            pass
