@@ -18,13 +18,14 @@ auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 api = tweepy.API(auth)
 
+
 def timeline_encoder(obj):
     """JSON serializer for datetime type (that are returned from created_at tweet request)"""
-
     if isinstance(obj, datetime):
         serial = obj.isoformat()
         return serial
-    raise TypeError ("Type not serializable")
+    raise TypeError("Type not serializable")
+
 
 def user_information(user_id, number_of_tweets=200):
     user = api.get_user(user_id)
@@ -42,7 +43,7 @@ def user_information(user_id, number_of_tweets=200):
                    "date": tweet.created_at}
         d_json["tweets"].append(d_tweet)
 
-    print(json.dumps(d_json default = timeline_encoder))
+    print(json.dumps(d_json, default=timeline_encoder))
     print("ℵ")
     return True
 
