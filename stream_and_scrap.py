@@ -18,8 +18,6 @@ auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 
-
-
 def user_information(user_id, number_of_tweets=200):
     user = api.get_user(user_id)
 
@@ -36,7 +34,7 @@ def user_information(user_id, number_of_tweets=200):
                    "date": tweet.created_at}
         d_json["tweets"].append(d_tweet)
 
-    print(d_json)
+    print(json.dumps(d_json))
     print("ℵ")
     return True
 
