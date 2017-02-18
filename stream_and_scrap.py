@@ -76,7 +76,7 @@ class StdOutListener(StreamListener):
             observed_users[user_id] += 1
 
         if (time.time() - self.time) > self.limit:
-            print(observed_users)
+            print(json.dumps(observed_users))
             exit()
 
         return True
@@ -89,7 +89,7 @@ if __name__ == '__main__':
 
     observed_users = {}
     # The program will run for 24 hours
-    l = StdOutListener(time_limit=86400)
+    l = StdOutListener(time_limit=10)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)
