@@ -5,6 +5,7 @@ import os
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
+from datetime import datetime
 import tweepy
 import time
 
@@ -41,7 +42,7 @@ def user_information(user_id, number_of_tweets=200):
                    "date": tweet.created_at}
         d_json["tweets"].append(d_tweet)
 
-    print(json.dumps(d_json), default = timeline_encoder)
+    print(json.dumps(d_json default = timeline_encoder))
     print("ℵ")
     return True
 
