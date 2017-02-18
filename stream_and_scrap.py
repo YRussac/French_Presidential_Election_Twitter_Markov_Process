@@ -9,11 +9,11 @@ from datetime import datetime
 import tweepy
 import time
 
+# Twitter API Authentication
 CONSUMER_KEY = os.environ["CONSUMER_KEY"]
 CONSUMER_SECRET = os.environ["CONSUMER_SECRET"]
 OAUTH_TOKEN = os.environ["OAUTH_TOKEN"]
 OAUTH_TOKEN_SECRET = os.environ["OAUTH_TOKEN_SECRET"]
-
 auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 api = tweepy.API(auth)
@@ -28,6 +28,11 @@ def timeline_encoder(obj):
 
 
 def user_information(user_id, number_of_tweets=200):
+    """
+    Prints a JSON object containing informations about a given Twitter user (name, followers count, friends count...)
+    :param user_id: string, Twitter user id
+    :param number_of_tweets: int, number of tweets we want to fetch for the given user
+    """
     user = api.get_user(user_id)
 
     d_json = {"screen_name": user.screen_name,  "followers_count": user.followers_count,
@@ -47,13 +52,12 @@ def user_information(user_id, number_of_tweets=200):
     print("ℵ")
     return True
 
-
+# Class used to stream Twitter incoming tweets
 class StdOutListener(StreamListener):
 
-    def __init__(self, time_limit=10000):
-        self.time = time.time()
-        self.limit = time_limit
-        self.tweet_data = []
+    def __init__(self, time_limit=86400):
+        self.initial_time = time.time()
+        self.time_limit = time_limit
 
     def on_data(self, data):
 
@@ -75,26 +79,29 @@ class StdOutListener(StreamListener):
         else:
             observed_users[user_id] += 1
 
-        if (time.time() - self.time) > self.limit:
+        if (time.time() - self.initial_time) > self.time_limit:
+            # If we exceed time limit
+            # Prints the dictionary in which the keys are the users id and the values the number of occurences of those
+            # users while we streamed
             print(json.dumps(observed_users))
+            # Exits the program
             exit()
 
         return True
 
     def on_error(self, status):
         pass
-        # print("Error !")
 
 if __name__ == '__main__':
 
     observed_users = {}
     # The program will run for 24 hours
-    l = StdOutListener(time_limit=10)
+    l = StdOutListener(time_limit=86400)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)
 
-    # This line filter Twitter Streams to capture data by the hashtags of the french candidates for
+    # This line filters Twitter Stream to capture data of users who use hashtags related to the French candidates for
     # the presidential election
 
     while True:
