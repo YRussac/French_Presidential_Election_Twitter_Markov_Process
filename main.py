@@ -28,12 +28,12 @@ nx.draw_networkx(G, node_color=colors_s, alpha=0.5, cmap=plt.get_cmap('bwr'))
 if plot:
     x = [i for i in range(n-2)]
 
-    plt.subplots(nrows=5, ncols=3, sharex=True, figsize=(6, 6))
+    plt.subplots(nrows=2, ncols=3, sharex=True, figsize=(6, 6))
 
     print('Plotting')
 
-    for i in range(15):
-        ax = plt.subplot(5, 3, i + 1)
+    for i in range(10):
+        ax = plt.subplot(2, 3, i + 1)
         ax.yaxis.tick_right()
         ax.title.set_text('Node {} 2nd order centrality'.format(i))
         ax.plot(x, s[i][:n - 2])

@@ -38,26 +38,23 @@ def graph_centrality(graph, N):
 
     iteration = 0
 
-    same_loc = False
-
     while not length_epsilon(epsilon, N):
-        if not same_loc:
-            # print("Nouvelle entrée dans la boucle")
-            if last_time_visited[random_walk_loc] == -1:
-                # print("je reste à l'ancienne position")
-                # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
-                last_time_visited[random_walk_loc] = iteration
-                epsilon[random_walk_loc], sigma[random_walk_loc], mu[random_walk_loc] = [], [], []
+        # print("Nouvelle entrée dans la boucle")
+        if last_time_visited[random_walk_loc] == -1:
+            # print("je reste à l'ancienne position")
+            # print(("detection d'un point jamais encore visite, première visite en t="),iteration)
+            last_time_visited[random_walk_loc] = iteration
+            epsilon[random_walk_loc], sigma[random_walk_loc], mu[random_walk_loc] = [], [], []
 
-            else:
-                epsilon[random_walk_loc].append(iteration - last_time_visited[random_walk_loc])
-                last_time_visited[random_walk_loc] = iteration
-                # print("ce n'est pas ma premiere visite ici")
+        else:
+            epsilon[random_walk_loc].append(iteration - last_time_visited[random_walk_loc])
+            last_time_visited[random_walk_loc] = iteration
+            # print("ce n'est pas ma premiere visite ici")
 
-                if len(epsilon[random_walk_loc]) > 2:
-                    # We add one degree of freedom (ddof=1) to get the unbiased standard error
-                    mu[random_walk_loc].append(np.mean(epsilon[random_walk_loc]))
-                    sigma[random_walk_loc].append(np.std(epsilon[random_walk_loc], ddof=1))
+            if len(epsilon[random_walk_loc]) > 2:
+                # We add one degree of freedom (ddof=1) to get the unbiased standard error
+                mu[random_walk_loc].append(np.mean(epsilon[random_walk_loc]))
+                sigma[random_walk_loc].append(np.std(epsilon[random_walk_loc], ddof=1))
 
         # Neighbors of actual location node
         ngbs = neighbors(graph, random_walk_loc)
@@ -72,10 +69,6 @@ def graph_centrality(graph, N):
         if p <= d_i / d_j:
             # Moving onto next location
             random_walk_loc = next_loc
-            same_loc = False
-        else:
-            same_loc = False
-            #same_loc = True
 
         iteration += 1
 
