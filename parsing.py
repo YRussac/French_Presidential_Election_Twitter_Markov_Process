@@ -37,6 +37,16 @@ def links(users_list, n, users_id):
 #    return m
 
 g = {nodes_list[i]['id']: links(nodes_list, i, users_count) for i in range(0, len(nodes_list))}
-print(len(g))
-print(g[nodes_list[600]['id']])
+
+def symetrisation(graph):
+    for key in graph.keys():
+        l = graph[key]
+        for ngb in l:
+            if key not in graph[ngb]:
+                graph[ngb].append(key)
+    return graph
+graphe = symetrisation(g)
+
+print(len(graphe))
+print(graphe[nodes_list[600]['id']])
 print("ok")
