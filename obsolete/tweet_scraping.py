@@ -18,14 +18,13 @@ twitter_api = twitter.Twitter(auth=auth)
 # We start with a list of hashtag of the main candidates for the French presidential elections
 
 hashtag_list = ["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#JLM2017", "#NDA2017", "#Jadot2017"]
-hashtag_list2=["#Macron2017"]
 
 # We browse the list and we only keep the info we want from the tweets
 
 # print are here for debugging, once we will have defined all the info we want to keep
 # we'll save it in a dataframe
 
-for hashtag in hashtag_list2:
+for hashtag in hashtag_list:
 
     print(hashtag)
 
