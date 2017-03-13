@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 from random import randint
 from random import uniform, seed
+import sys
 import numpy as np
 import json
 import datetime
 import matplotlib.pyplot as plt
 
 # Parsing
+l=[]
 with open('saved_info.txt', 'r') as f:
-    l = f.read().split('\nℵ\n')
+    for line in f:
+        if "ℵ" not in line:
+            l.append(line)
+    #l = f.read().split('\nℵ\n')
 f.close()
 
 dict_list = [json.loads(j) for j in l]
@@ -33,9 +38,8 @@ def links(users_list, n, users_id):
         for j in range(0, len(users_list[n]['tweets'][i]['user_mentions'])):
 
             # si un utilisateur mentionné est dans la liste qui contient tous les users qui ont utilisé un des hashtags
-            if users_list[n]['tweets'][i]['user_mentions'][j] in users_id:
-
-                if users_list[n]['tweets'][i]['user_mentions'][j] not in m:
+            if users_list[n]['tweets'][i]['user_mentions'][j] in users_id:   
+                if users_list[n]['tweets'][i]['user_mentions'][j] not in m and users_list[n]['tweets'][i]['user_mentions'][j] != users_list[n]['id']:
                     m.append(users_list[n]['tweets'][i]['user_mentions'][j])
     return m
 
@@ -57,6 +61,7 @@ def directed_to_undirected(directed_graph):
 undirected_graph = directed_to_undirected(directed_graph)
 
 # Plot histogram (niehgbors per node)
+
 h = [len(undirected_graph[key]) for key in undirected_graph.keys() if len(undirected_graph[key]) < 10]
 print(len(h))
 plt.hist(h, bins=50)
@@ -131,7 +136,42 @@ def graph_centrality(graph, N, users_list, verbose=False):
 
     return epsilon, mu, sigma
 
-epsilon, mu, sigma = graph_centrality(undirected_graph, 10, nodes_list)
+def connected(undirected_graph):
+	#starting from a random nodes, return if graph is connected, explored and unexplored nodes
+	unexplored_nodes = set(undirected_graph.keys())
+	explored_nodes = set()
+	nodes_in_exploration = [unexplored_nodes.pop()]
+	explored_nodes = [nodes_in_exploration[-1]]
+	i = 0
+	while nodes_in_exploration != []:
+		current_node = nodes_in_exploration.pop()
+		for node in undirected_graph[current_node]:
+			if node in unexplored_nodes and node not in nodes_in_exploration:
+				nodes_in_exploration.append(node)
+				unexplored_nodes.remove(node)
+				explored_nodes.append(node)
+
+	return (unexplored_nodes == set(), explored_nodes, unexplored_nodes)
+
+
+def connected_components(undirected_graph):
+	# returns a list of connected components of  a graph, with their size
+	components = []
+	unexplored_nodes = set(undirected_graph.keys())
+	undirected_graph2 = undirected_graph
+	while unexplored_nodes != set():
+		res, explored_nodes, unexplored_nodes = connected(undirected_graph2)
+		undirected_graph2 = {node : undirected_graph2[node] for node in unexplored_nodes}
+		components.append((list(explored_nodes),len(explored_nodes)))
+	return components
+
+components = connected_components(undirected_graph)
+
+print([comp[1] for comp in components], sum([comp[1] for comp in components]), len(undirected_graph))
+
+
+
+epsilon, mu, sigma = graph_centrality(undirected_graph, 10, nodes_list, verbose = True)
 
 l = []
 
