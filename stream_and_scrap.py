@@ -8,6 +8,7 @@ from tweepy import Stream
 from datetime import datetime
 import tweepy
 import time
+import sys
 
 # Twitter API Authentication
 CONSUMER_KEY = os.environ["CONSUMER_KEY"]
@@ -38,18 +39,25 @@ def user_information(user_id, number_of_tweets=200):
     d_json = {"screen_name": user.screen_name,  "followers_count": user.followers_count,
               "friends_count": user.friends_count, "user_location": user.location, "tweets": [], "id": user_id}
 
-    statuses = api.user_timeline(user_id, count=number_of_tweets)
+    # We include retweets
+    statuses = api.user_timeline(user_id, count=number_of_tweets, include_rts=True)
 
     for tweet in statuses:
-
-        d_tweet = {"tweet_id": tweet.id_str, "text": tweet.text, "tweet_geo": tweet.geo,
-                   "hashtags": [hashtag['text'] for hashtag in tweet.entities["hashtags"]],
-                   "user_mentions": [user_mention['id_str'] for user_mention in tweet.entities["user_mentions"]],
-                   "date": tweet.created_at}
+        # Check if tweet comes from a retweet (to be able to get orignal tweet text)
+        if not hasattr(tweet, 'retweeted_status'):
+            d_tweet = {"tweet_id": tweet.id_str, "text": tweet.text, "tweet_geo": tweet.geo,
+                       "hashtags": [hashtag['text'] for hashtag in tweet.entities["hashtags"]],
+                       "user_mentions": [user_mention['id_str'] for user_mention in tweet.entities["user_mentions"]],
+                       "date": tweet.created_at, "retweet": False}
+        else:
+            d_tweet = {"tweet_id": tweet.id_str, "text": tweet.text, "tweet_geo": tweet.geo,
+                       "hashtags": [hashtag['text'] for hashtag in tweet.entities["hashtags"]],
+                       "user_mentions": [user_mention['id_str'] for user_mention in tweet.entities["user_mentions"]],
+                       "date": tweet.created_at, "retweet": True, "original_text": tweet.retweeted_status.text,
+                       "original_hashtags": [hashtag['text'] for hashtag in tweet.retweeted_status.entities["hashtags"]]}
         d_json["tweets"].append(d_tweet)
 
     print(json.dumps(d_json, default=timeline_encoder))
-    print("ℵ")
     return True
 
 # Class used to stream Twitter incoming tweets
@@ -74,7 +82,8 @@ class StdOutListener(StreamListener):
                     user_information(user_id, 200)
                     observed_users[user_id] = 1
                     too_many_requests = False
-                except:
+                except Exception as e:
+                    print(e)
                     time.sleep(10)
         else:
             observed_users[user_id] += 1
@@ -96,7 +105,7 @@ if __name__ == '__main__':
 
     observed_users = {}
     # The program will run for 24 hours
-    l = StdOutListener(time_limit=86400)
+    l = StdOutListener(time_limit=60)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)

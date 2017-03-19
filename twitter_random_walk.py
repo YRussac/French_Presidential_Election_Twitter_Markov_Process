@@ -21,6 +21,18 @@ dict_list = [json.loads(j) for j in l]
 # List of dictionaries (one dictionary for each node/user)
 nodes_list = dict_list[:-1]
 
+important_hashtags = ["Macron2017", "Hamon2017", "MLP2017", "Fillon2017", "JLM2017", "NDA2017", "Jadot2017"]
+
+for i in range(len(nodes_list)):
+    used_important_hashtag = False
+    for tweet in nodes_list[i]['tweets']:
+        for hashtag in tweet['hashtags']:
+            if hashtag in important_hashtags:
+                used_important_hashtag = True
+                break
+
+exit()
+
 # Dictionary in which the keys are the user_id and the values the number of times the user appeared while scraping
 users_count = dict_list[-1]
 
@@ -60,6 +72,8 @@ def directed_to_undirected(directed_graph):
 
 undirected_graph = directed_to_undirected(directed_graph)
 
+
+exit()
 # Plot histogram (niehgbors per node)
 
 h = [len(undirected_graph[key]) for key in undirected_graph.keys() if len(undirected_graph[key]) < 10]
