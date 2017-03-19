@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# This script is used to stream Twitter and get the data
+
 import json
 import os
 from tweepy.streaming import StreamListener
@@ -8,7 +10,6 @@ from tweepy import Stream
 from datetime import datetime
 import tweepy
 import time
-import sys
 
 # Twitter API Authentication
 CONSUMER_KEY = os.environ["CONSUMER_KEY"]
@@ -115,7 +116,8 @@ if __name__ == '__main__':
 
     while True:
         try:
-            stream.filter(track=["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#JLM2017", "#NDA2017",
-                                 "#Jadot2017"])
+            stream.filter(track=["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#Arthaud2017",
+                                 "#Lassalle2017", "#Cheminade2017", "#JLM2017", "#NDA2017", "#Asselineau2017",
+                                 "#Poutou2017"])
         except AttributeError:
             time.sleep(10)

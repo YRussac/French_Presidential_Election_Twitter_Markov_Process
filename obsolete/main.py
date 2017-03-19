@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
-from functions import *
+
+from obsolete.functions import *
 
 # We load Zakary's Karate Club Graph
 G = nx.karate_club_graph()
