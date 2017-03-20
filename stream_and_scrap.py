@@ -84,7 +84,6 @@ class StdOutListener(StreamListener):
                     observed_users[user_id] = 1
                     too_many_requests = False
                 except Exception as e:
-                    print(e)
                     time.sleep(10)
         else:
             observed_users[user_id] += 1
@@ -105,8 +104,7 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     observed_users = {}
-    # The program will run for 24 hours
-    l = StdOutListener(time_limit=60)
+    l = StdOutListener(time_limit=21600)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)
