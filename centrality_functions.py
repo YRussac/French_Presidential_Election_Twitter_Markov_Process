@@ -15,15 +15,16 @@ def length_epsilon(lofl, n, graph):
     return res
 
 
-def graph_centrality(graph, N, users_list, verbose=False):
+def graph_centrality(graph, N, verbose=False):
     graph_order = len(graph)
 
+    nodes = list(graph.keys())
     # Initial node
-    random_walk_loc = users_list[randint(0, graph_order - 1)]['id']
+    random_walk_loc = nodes[randint(0, graph_order - 1)]
 
     # While the initial node is isolated (at most 1 neighbour)
     while len(graph[random_walk_loc]) < 2:
-        random_walk_loc = users_list[randint(0, graph_order - 1)]['id']
+        random_walk_loc = nodes[randint(0, graph_order - 1)]
 
     # for each node gives the last iteration we were on this node
     last_time_visited = {key: -1 for key in graph.keys()}
@@ -31,9 +32,9 @@ def graph_centrality(graph, N, users_list, verbose=False):
     # for each node gives a list of the return times to this node
     epsilon = {key: [] for key in graph.keys()}
 
-    mu = {key: [] for key in graph.keys()}
+    # mu = {key: [] for key in graph.keys()}
 
-    sigma = {key: [] for key in graph.keys()}
+    # sigma = {key: [] for key in graph.keys()}
 
     iteration = 0
 
@@ -46,16 +47,17 @@ def graph_centrality(graph, N, users_list, verbose=False):
         if last_time_visited[random_walk_loc] == -1:
             # First visit to this node
             last_time_visited[random_walk_loc] = iteration
-            epsilon[random_walk_loc], sigma[random_walk_loc], mu[random_walk_loc] = [], [], []
+            epsilon[random_walk_loc]
+            # sigma[random_walk_loc], mu[random_walk_loc] = [], [], []
 
         else:
             epsilon[random_walk_loc].append(iteration - last_time_visited[random_walk_loc])
             last_time_visited[random_walk_loc] = iteration
 
-            if len(epsilon[random_walk_loc]) > 2:
+            # if len(epsilon[random_walk_loc]) > 2:
                 # We add one degree of freedom (ddof=1) to get the unbiased standard error
-                mu[random_walk_loc].append(np.mean(epsilon[random_walk_loc]))
-                sigma[random_walk_loc].append(np.std(epsilon[random_walk_loc], ddof=1))
+                # mu[random_walk_loc].append(np.mean(epsilon[random_walk_loc]))
+                # sigma[random_walk_loc].append(np.std(epsilon[random_walk_loc], ddof=1))
 
         # Neighbors of actual location node
         ngbs = graph[random_walk_loc]
@@ -72,4 +74,5 @@ def graph_centrality(graph, N, users_list, verbose=False):
 
         iteration += 1
 
-    return epsilon, mu, sigma
+    return epsilon
+    #return epsilon, mu, sigma
