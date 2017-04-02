@@ -8,14 +8,11 @@ import matplotlib.pyplot as plt
 from graph_functions import links, directed_to_undirected, connected, connected_components
 from centrality_functions import graph_centrality
 
-
 # Parsing
 l = []
-with open('test.txt', 'r') as f:
+with open('trentemars.txt', 'r') as f:
     for line in f:
-        if "ℵ" not in line:
-            l.append(line)
-    #l = f.read().split('\nℵ\n')
+        l.append(line)
 f.close()
 
 dict_list = [json.loads(j) for j in l]
@@ -32,7 +29,7 @@ directed_graph = {nodes_list[i]['id']: links(nodes_list, i, users_count) for i i
 # Transforms the directed graph into an undirected graph
 undirected_graph = directed_to_undirected(directed_graph)
 
-# Plot histogram (niehgbors per node)
+# Plot histogram (neighbors per node)
 # h = [len(undirected_graph[key]) for key in undirected_graph.keys() if len(undirected_graph[key]) < 10]
 # plt.hist(h, bins=50)
 # plt.show()
@@ -42,14 +39,24 @@ undirected_graph = directed_to_undirected(directed_graph)
 # print([comp[1] for comp in components], sum([comp[1] for comp in components]), len(undirected_graph))
 
 
-epsilon, mu, sigma = graph_centrality(undirected_graph, 10, nodes_list, verbose=True)
+epsilon, mu, sigma = graph_centrality(undirected_graph, 1000, nodes_list, verbose=False)
 
 l = []
 
 for key in sigma.keys():
-    if len(sigma[key]) > 10:
+    if len(sigma[key]) > 0:
         l.append((key, sigma[key][-1]))
 
-l.sort(key=lambda tup: tup[1])
+# l.sort(key=lambda tup: tup[1])
 
-print(l)
+with open('epsilon.json', 'w') as fp:
+    json.dump(epsilon, fp)
+fp.close()
+
+with open('mu.json', 'w') as fp:
+    json.dump(mu, fp)
+fp.close()
+
+with open('sigma.json', 'w') as fp:
+    json.dump(sigma, fp)
+fp.close()

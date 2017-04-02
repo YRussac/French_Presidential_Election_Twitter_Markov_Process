@@ -61,6 +61,7 @@ def user_information(user_id, number_of_tweets=200):
     print(json.dumps(d_json, default=timeline_encoder))
     return True
 
+
 # Class used to stream Twitter incoming tweets
 class StdOutListener(StreamListener):
 
@@ -104,7 +105,7 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     observed_users = {}
-    l = StdOutListener(time_limit=21600)
+    l = StdOutListener(time_limit=86400)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)

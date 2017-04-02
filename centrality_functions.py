@@ -5,6 +5,7 @@ from random import uniform, seed
 import numpy as np
 import datetime
 
+
 def length_epsilon(lofl, n, graph):
     res = True
     for key in lofl.keys():
