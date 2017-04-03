@@ -7,15 +7,14 @@ import datetime
 
 
 def length_epsilon(lofl, n, graph):
-    res = True
     for key in lofl.keys():
         if len(graph[key]) > 10 and len(lofl[key]) < n:
-            res = False
-            break
-    return res
+            return False
+    return True
 
 
 def graph_centrality(graph, N, verbose=False):
+
     graph_order = len(graph)
 
     nodes = list(graph.keys())
@@ -47,7 +46,7 @@ def graph_centrality(graph, N, verbose=False):
         if last_time_visited[random_walk_loc] == -1:
             # First visit to this node
             last_time_visited[random_walk_loc] = iteration
-            epsilon[random_walk_loc]
+            epsilon[random_walk_loc] = []
             # sigma[random_walk_loc], mu[random_walk_loc] = [], [], []
 
         else:

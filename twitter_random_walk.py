@@ -3,14 +3,14 @@
 # Main file
 
 import json
+import os
 import datetime
 import matplotlib.pyplot as plt
 from graph_functions import links, directed_to_undirected, connected, connected_components
 from centrality_functions import graph_centrality
 
-create_graph = False
 
-if create_graph:
+if 'undirected_graph.json' not in os.listdir(os.getcwd()):
     # Parsing
     l = []
     with open('trentemars.txt', 'r') as f:
@@ -37,6 +37,10 @@ if create_graph:
     # plt.hist(h, bins=50)
     # plt.show()
 
+    v, explored_nodes, unexplored_nodes = connected(undirected_graph)
+
+    for node in unexplored_nodes:
+        undirected_graph.pop(node)
 
     # components = connected_components(undirected_graph)
     # print([comp[1] for comp in components], sum([comp[1] for comp in components]), len(undirected_graph))
@@ -51,7 +55,7 @@ else:
     fp.close()
 
 
-epsilon = graph_centrality(undirected_graph, 1000, verbose=False)
+epsilon = graph_centrality(undirected_graph, 500, verbose=False)
 
 # epsilon, mu, sigma = graph_centrality(undirected_graph, 1000, verbose=False)
 
