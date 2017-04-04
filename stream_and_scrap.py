@@ -105,7 +105,7 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     observed_users = {}
-    l = StdOutListener(time_limit=86400)
+    l = StdOutListener(time_limit=14400)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)
@@ -120,3 +120,6 @@ if __name__ == '__main__':
                                  "#Poutou2017"])
         except AttributeError:
             time.sleep(10)
+        except :
+            time.sleep(5)
+

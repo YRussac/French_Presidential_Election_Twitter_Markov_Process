@@ -35,7 +35,7 @@ if 'undirected_graph.json' not in os.listdir(os.getcwd()):
     # Plot histogram (neighbors per node)
     # h = [len(undirected_graph[key]) for key in undirected_graph.keys() if len(undirected_graph[key]) < 10]
     # plt.hist(h, bins=50)
-    # plt.show()
+    # plt.show())
 
     v, explored_nodes, unexplored_nodes = connected(undirected_graph)
 
@@ -55,7 +55,7 @@ else:
     fp.close()
 
 
-epsilon = graph_centrality(undirected_graph, 500, verbose=False)
+epsilon = graph_centrality(undirected_graph, 3500, verbose=False)
 
 # epsilon, mu, sigma = graph_centrality(undirected_graph, 1000, verbose=False)
 
