@@ -68,7 +68,8 @@ def connected_components(undirected_graph):
     return components
 
 #returns a dictionnary where the keys are the 'id' and for each 'id' we have the hashtags he used and the number of times he used it
-def users_hashtag(i, hashtag_list):
+#def users_hashtag(i, hashtag_list):
+def users_hashtag(i):    
     l = {}
     for tweets in nodes_list[i]['tweets']:
         if (tweets['hashtags'] != []):
