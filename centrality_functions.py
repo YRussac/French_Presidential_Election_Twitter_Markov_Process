@@ -13,8 +13,8 @@ def length_epsilon(lofl, n, graph):
     return True
 
 
-def graph_centrality(graph, N, verbose=False):
-
+def graph_centrality(graph, N, verbose=False, method = "M", d = 0.85):
+    # method is M for metropolis and P for pagerank, d is a pagerank algorithm parameter
     graph_order = len(graph)
 
     nodes = list(graph.keys())
@@ -60,16 +60,25 @@ def graph_centrality(graph, N, verbose=False):
 
         # Neighbors of actual location node
         ngbs = graph[random_walk_loc]
+        if method == "M":
+            # Next location chosen randomly
+            next_loc = ngbs[randint(0, len(ngbs) - 1)]
+            d_j = len(graph[next_loc])
+            d_i = len(ngbs)
+            p = uniform(0, 1)
 
-        # Next location chosen randomly
-        next_loc = ngbs[randint(0, len(ngbs) - 1)]
-        d_j = len(graph[next_loc])
-        d_i = len(ngbs)
-        p = uniform(0, 1)
+            if p <= d_i / d_j:
+                # Moving onto next location
+                random_walk_loc = next_loc
+        elif method == "P":
+            p = uniform(0,1)
+            if len(ngbs) == 0 or p < 1 - d:
+                random_walk_loc = nodes[randint(0, graph_order - 1)]
+            else:
+                random_walk_loc = ngbs[randint(0, len(ngbs) - 1)]
+        else:
+            return ("parameter method should be 'M' for metropolis hastings or 'P' for page rank ")
 
-        if p <= d_i / d_j:
-            # Moving onto next location
-            random_walk_loc = next_loc
 
         iteration += 1
 
