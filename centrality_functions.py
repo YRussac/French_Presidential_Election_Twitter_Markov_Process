@@ -12,6 +12,21 @@ def length_epsilon(lofl, n, graph):
             return False
     return True
 
+#Function to detect nodes that have less than 10 non consecutives returns 
+def pathologic_search(epsilon):
+    nodes_to_delete = []
+    for key in epsilon.keys():
+        i = 0
+        for j in range(0, len(epsilon[key])):
+                if epsilon[key][j] != 1:
+                    i += 1
+                if i == 9:
+                    print("le noeud est assez important")
+                    break
+        if i < 9:
+            nodes_to_delete.append(key)
+    return nodes_to_delete
+
 
 def graph_centrality(graph, N, verbose=False, method = "M", d = 0.85):
     # method is M for metropolis and P for pagerank, d is a pagerank algorithm parameter
@@ -81,6 +96,8 @@ def graph_centrality(graph, N, verbose=False, method = "M", d = 0.85):
 
 
         iteration += 1
-
-    return epsilon
+        
+    print("RECHERCHE DES NOEUDS PATHOLOGIQUES")
+    nodestodelete = pathologic_search(epsilon)
+    return epsilon, nodestodelete
     #return epsilon, mu, sigma
