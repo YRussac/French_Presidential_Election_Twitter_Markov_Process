@@ -10,6 +10,7 @@ from tweepy import Stream
 from datetime import datetime
 import tweepy
 import time
+from http.client import IncompleteRead
 
 # Twitter API Authentication
 CONSUMER_KEY = os.environ["CONSUMER_KEY"]
@@ -120,6 +121,6 @@ if __name__ == '__main__':
                                  "#Poutou2017"])
         except AttributeError:
             time.sleep(10)
-        except :
+        except IncompleteRead:
             time.sleep(5)
 

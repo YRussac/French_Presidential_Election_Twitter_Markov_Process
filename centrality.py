@@ -6,6 +6,10 @@ with open('epsilon.json', 'r') as f:
     epsilon = json.load(f)
 f.close()
 
+with open('id_to_name.json', 'r') as f:
+    id_to_name = json.load(f)
+f.close()
+
 mu = {}
 sigma = {}
 
@@ -14,11 +18,11 @@ for node in epsilon:
     mu[node] = np.mean(epsilon[node])
     sigma[node] = np.std(epsilon[node], ddof=1)
 
-l = [(key, sigma[key]) for key in sigma.keys() if len(epsilon[key]) > 500]
+l = [(id_to_name[key], sigma[key]) for key in sigma.keys() if len(epsilon[key]) > 2000]
 l.sort(key=lambda tup: tup[1])
 print(l)
 
-l = [(key, mu[key]) for key in sigma.keys() if len(epsilon[key]) > 500]
+l = [(id_to_name[key], mu[key]) for key in sigma.keys() if len(epsilon[key]) > 2000]
 l.sort(key=lambda tup: tup[1])
 print(l)
 
