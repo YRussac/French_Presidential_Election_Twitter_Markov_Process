@@ -80,5 +80,4 @@ def users_hashtag(i):
                 else:
                     l[hashtags] = 1
     return l
-NbHashtags_used = {nodes_list[i]['id']: users_hashtag(i) for i in range(0, len(nodes_list))}
 
