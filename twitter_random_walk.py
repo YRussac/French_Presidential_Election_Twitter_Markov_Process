@@ -13,7 +13,7 @@ from centrality_functions import graph_centrality
 if 'undirected_graph.json' not in os.listdir(os.getcwd()):
     # Parsing
     l = []
-    with open('trentemars.txt', 'r') as f:
+    with open('seizeavril.txt', 'r') as f:
         for line in f:
             l.append(line)
     f.close()
