@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# This script is used to stream Twitter and get the data
+# This script is used to stream Twitter and fetch the tweets
 
 import json
 import os
@@ -123,4 +123,3 @@ if __name__ == '__main__':
             time.sleep(10)
         except IncompleteRead:
             time.sleep(5)
-

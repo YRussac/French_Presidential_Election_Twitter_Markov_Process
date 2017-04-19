@@ -1,19 +1,28 @@
 # This file contains the functions we use to compute nodes centralities
 
 from random import randint
-from random import uniform, seed
-import numpy as np
+from random import uniform
 import datetime
 
 
-def length_epsilon(lofl, n, graph):
-    for key in lofl.keys():
-        if len(graph[key]) > 10 and len(lofl[key]) < n:
+def enough_return_times(return_times, n, graph):
+    """
+
+    :param return_times:
+    :param n:
+    :param graph:
+    :return:
+    """
+    for key in return_times.keys():
+        if len(graph[key]) > 10 and len(return_times[key]) < n:
             return False
     return True
 
-#Function to detect nodes that have less than 10 non consecutives returns 
-def pathologic_search(epsilon):
+
+def pathological_nodes_search(epsilon):
+    """
+    Function to detect nodes that have less than 10 non-consecutives returns
+    """
     nodes_to_delete = []
     for key in epsilon.keys():
         i = 0
@@ -21,15 +30,16 @@ def pathologic_search(epsilon):
                 if epsilon[key][j] != 1:
                     i += 1
                 if i == 9:
-                    print("le noeud est assez important")
                     break
         if i < 9:
             nodes_to_delete.append(key)
     return nodes_to_delete
 
 
-def graph_centrality(graph, N, verbose=False, method = "M", d = 0.85):
-    # method is M for metropolis and P for pagerank, d is a pagerank algorithm parameter
+def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
+    """"
+    Method is M for Metropolis and P for PageRank, d is a PageRank algorithm parameter (which one ?)
+    """
     graph_order = len(graph)
 
     nodes = list(graph.keys())
@@ -40,19 +50,15 @@ def graph_centrality(graph, N, verbose=False, method = "M", d = 0.85):
     while len(graph[random_walk_loc]) < 2:
         random_walk_loc = nodes[randint(0, graph_order - 1)]
 
-    # for each node gives the last iteration we were on this node
-    last_time_visited = {key: -1 for key in graph.keys()}
+    # Gives for each node the last iteration we were on this node
+    last_time_visited = {node: -1 for node in graph.keys()}
 
-    # for each node gives a list of the return times to this node
-    epsilon = {key: [] for key in graph.keys()}
-
-    # mu = {key: [] for key in graph.keys()}
-
-    # sigma = {key: [] for key in graph.keys()}
+    # For each node gives a list of the return times to this node
+    epsilon = {node: [] for node in graph.keys()}
 
     iteration = 0
 
-    while not length_epsilon(epsilon, N, graph):
+    while not enough_return_times(epsilon, n, graph):
         if verbose:
             print('--------------')
             print('Location of the RW : ' + str(random_walk_loc))
@@ -62,42 +68,35 @@ def graph_centrality(graph, N, verbose=False, method = "M", d = 0.85):
             # First visit to this node
             last_time_visited[random_walk_loc] = iteration
             epsilon[random_walk_loc] = []
-            # sigma[random_walk_loc], mu[random_walk_loc] = [], [], []
 
         else:
             epsilon[random_walk_loc].append(iteration - last_time_visited[random_walk_loc])
             last_time_visited[random_walk_loc] = iteration
 
-            # if len(epsilon[random_walk_loc]) > 2:
-                # We add one degree of freedom (ddof=1) to get the unbiased standard error
-                # mu[random_walk_loc].append(np.mean(epsilon[random_walk_loc]))
-                # sigma[random_walk_loc].append(np.std(epsilon[random_walk_loc], ddof=1))
-
         # Neighbors of actual location node
-        ngbs = graph[random_walk_loc]
+        neighbors = graph[random_walk_loc]
+
         if method == "M":
             # Next location chosen randomly
-            next_loc = ngbs[randint(0, len(ngbs) - 1)]
-            d_j = len(graph[next_loc])
-            d_i = len(ngbs)
+            next_location = neighbors[randint(0, len(neighbors) - 1)]
+            d_j = len(graph[next_location])
+            d_i = len(neighbors)
             p = uniform(0, 1)
 
             if p <= d_i / d_j:
                 # Moving onto next location
-                random_walk_loc = next_loc
+                random_walk_loc = next_location
+
         elif method == "P":
-            p = uniform(0,1)
-            if len(ngbs) == 0 or p < 1 - d:
+            p = uniform(0, 1)
+            if len(neighbors) == 0 or p < 1 - d:
                 random_walk_loc = nodes[randint(0, graph_order - 1)]
             else:
-                random_walk_loc = ngbs[randint(0, len(ngbs) - 1)]
+                random_walk_loc = neighbors[randint(0, len(neighbors) - 1)]
         else:
-            return ("parameter method should be 'M' for metropolis hastings or 'P' for page rank ")
-
+            return "Parameter method should be 'M' for Metropolis-Hastings or 'P' for PageRank"
 
         iteration += 1
         
-    print("RECHERCHE DES NOEUDS PATHOLOGIQUES")
-    nodestodelete = pathologic_search(epsilon)
-    return epsilon, nodestodelete
-    #return epsilon, mu, sigma
+    pathological_nodes = pathological_nodes_search(epsilon)
+    return epsilon, pathological_nodes

@@ -67,15 +67,17 @@ def connected_components(undirected_graph):
         components.append((list(explored_nodes),len(explored_nodes)))
     return components
 
-#returns a dictionnary where the keys are the 'id' and for each 'id' we have the hashtags he used and the number of times he used it
-#def users_hashtag(i, hashtag_list):
-def users_hashtag(i):    
+
+def users_hashtag(i):
+    """
+    returns a dictionary where the keys are the 'id' and for each 'id' we have the hashtags he used and the number of times he used it
+    """
     l = {}
     for tweets in nodes_list[i]['tweets']:
-        if (tweets['hashtags'] != []):
+        if tweets['hashtags'] != []:
             for hashtags in tweets['hashtags']:
-                #if hashtags in hashtag_list:                #If we only want hashatgs from the track list used for scrapping
-                if hashtags in l:
+                if hashtags in hashtag_list:                #If we only want hashatgs from the track list used for scrapping
+                #if hashtags in l:
                     l[hashtags] += 1
                 else:
                     l[hashtags] = 1

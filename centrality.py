@@ -1,3 +1,5 @@
+# Compute centralities
+
 import json
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,17 +8,15 @@ with open('epsilon.json', 'r') as f:
     epsilon = json.load(f)
 f.close()
 
+epsilon, pathological_nodes = epsilon[0], epsilon[1]
+
 with open('id_to_name.json', 'r') as f:
     id_to_name = json.load(f)
 f.close()
 
-mu = {}
-sigma = {}
+mu = {node: np.mean(epsilon[node]) for node in epsilon if node not in pathological_nodes}
+sigma = {node: np.std(epsilon[node], ddof=1) for node in epsilon if node not in pathological_nodes}
 
-
-for node in epsilon:
-    mu[node] = np.mean(epsilon[node])
-    sigma[node] = np.std(epsilon[node], ddof=1)
 
 l = [(id_to_name[key], sigma[key]) for key in sigma.keys() if len(epsilon[key]) > 2000]
 l.sort(key=lambda tup: tup[1])
