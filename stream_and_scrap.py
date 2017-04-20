@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
     while True:
         try:
-            stream.filter(track=["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#Arthaud2017",
+            stream.filter(track=["#Macron2017", "#Hamon2017", "#Marine2017", "#Fillon2017", "#Arthaud2017",
                                  "#Lassalle2017", "#Cheminade2017", "#JLM2017", "#NDA2017", "#Asselineau2017",
                                  "#Poutou2017"])
         except AttributeError:

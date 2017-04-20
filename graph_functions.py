@@ -8,6 +8,9 @@ import json
 import datetime
 import matplotlib.pyplot as plt
 
+hashtag_list = ["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#Arthaud2017", "#Lassalle2017",
+                "#Cheminade2017", "#JLM2017", "#NDA2017", "#Asselineau2017", "#Poutou2017"]
+
 
 def links(users_list, n, users_id):
     """
@@ -40,7 +43,7 @@ def directed_to_undirected(directed_graph):
 
 
 def connected(undirected_graph):
-    #starting from a random nodes, return if graph is connected, explored and unexplored nodes
+    # starting from a random nodes, return if graph is connected, explored and unexplored nodes
     unexplored_nodes = set(undirected_graph.keys())
     explored_nodes = set()
     nodes_in_exploration = [unexplored_nodes.pop()]
@@ -68,15 +71,15 @@ def connected_components(undirected_graph):
     return components
 
 
-def users_hashtag(i):
+def users_hashtag(undirected_graph, i):
     """
-    returns a dictionary where the keys are the 'id' and for each 'id' we have the hashtags he used and the number of times he used it
+    Returns a dictionary where the keys are the 'id' and for each 'id' we have the hashtags he used and the number of times he used it
     """
     l = {}
-    for tweets in nodes_list[i]['tweets']:
+    for tweets in undirected_graph[i]['tweets']:
         if tweets['hashtags'] != []:
             for hashtags in tweets['hashtags']:
-                if hashtags in hashtag_list:                #If we only want hashatgs from the track list used for scrapping
+                if hashtags in hashtag_list:               # If we only want hashtags from the list used for scrapping
                 #if hashtags in l:
                     l[hashtags] += 1
                 else:
