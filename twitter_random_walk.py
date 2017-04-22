@@ -62,7 +62,7 @@ else:
     fp.close()
 
 
-epsilon, pathological_nodes = graph_centrality(undirected_graph, 3500, verbose=False)
+epsilon, pathological_nodes = graph_centrality(undirected_graph, 6000, verbose=False)
 
 with open('epsilon.json', 'w') as fp:
     json.dump(epsilon, fp)

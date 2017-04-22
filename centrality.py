@@ -22,10 +22,11 @@ f.close()
 
 nodes = epsilon.keys()
 
-mu = {node: np.mean(epsilon[node]) for node in epsilon if node not in pathological_nodes}
-sigma = {node: np.std(epsilon[node], ddof=1) for node in epsilon if node not in pathological_nodes}
+mu = {node: np.mean(epsilon[node][500:]) for node in epsilon if node not in pathological_nodes}
+sigma = {node: np.std(epsilon[node][500:], ddof=1) for node in epsilon if node not in pathological_nodes}
 
-df_dict = {node: {'FirstOrder': mu[node], 'SecondOrder': sigma[node], 'id': id_to_name[node]} for node in epsilon if node not in pathological_nodes}
+df_dict = {node: {'FirstOrder': mu[node], 'SecondOrder': sigma[node], 'id': id_to_name[node]} for node in epsilon
+           if node not in pathological_nodes}
 
 df = pd.DataFrame.from_dict(df_dict, orient='index')
 df.to_excel('Centralite.xlsx')
