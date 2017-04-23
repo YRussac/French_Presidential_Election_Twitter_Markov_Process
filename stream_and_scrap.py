@@ -109,7 +109,7 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     observed_users = {}
-    l = StdOutListener(time_limit=10)
+    l = StdOutListener(time_limit=3000)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)
