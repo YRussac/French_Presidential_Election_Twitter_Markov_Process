@@ -5,16 +5,16 @@ from random import uniform
 import datetime
 
 
-def enough_return_times(return_times, n, graph):
+def enough_return_times(number_of_return_times, n, graph):
     """
 
-    :param return_times:
+    :param number_of_return_times:
     :param n:
     :param graph:
     :return:
     """
-    for key in return_times.keys():
-        if len(graph[key]) > 10 and len(return_times[key]) < n:
+    for key in number_of_return_times.keys():
+        if len(graph[key]) > 10 and number_of_return_times[key] < n:
             return False
     return True
 
@@ -58,7 +58,9 @@ def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
 
     iteration = 0
 
-    while not enough_return_times(epsilon, n, graph):
+    number_of_return_times = {node: 0 for node in graph.keys()}
+
+    while not enough_return_times(number_of_return_times, n, graph):
         if verbose:
             print('--------------')
             print('Location of the RW : ' + str(random_walk_loc))
@@ -70,8 +72,10 @@ def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
             epsilon[random_walk_loc] = []
 
         else:
-            epsilon[random_walk_loc].append(iteration - last_time_visited[random_walk_loc])
+            epsilon[random_walk_loc] = epsilon[random_walk_loc][-1500:] + [(iteration - last_time_visited[random_walk_loc])]
             last_time_visited[random_walk_loc] = iteration
+
+        number_of_return_times[random_walk_loc] += 1
 
         # Neighbors of actual location node
         neighbors = graph[random_walk_loc]
