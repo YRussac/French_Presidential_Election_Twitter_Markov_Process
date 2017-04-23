@@ -11,6 +11,9 @@ from datetime import datetime
 import tweepy
 import time
 from http.client import IncompleteRead
+import requests
+import os
+
 
 # Twitter API Authentication
 CONSUMER_KEY = os.environ["CONSUMER_KEY"]
@@ -96,7 +99,7 @@ class StdOutListener(StreamListener):
             # users while we streamed
             print(json.dumps(observed_users))
             # Exits the program
-            exit()
+            os._exit(1)
 
         return True
 
@@ -106,7 +109,7 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     observed_users = {}
-    l = StdOutListener(time_limit=14400)
+    l = StdOutListener(time_limit=10)
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     stream = Stream(auth, l)
@@ -119,7 +122,5 @@ if __name__ == '__main__':
             stream.filter(track=["#Macron2017", "#Hamon2017", "#Marine2017", "#Fillon2017", "#Arthaud2017",
                                  "#Lassalle2017", "#Cheminade2017", "#JLM2017", "#NDA2017", "#Asselineau2017",
                                  "#Poutou2017"], languages=['fr'])
-        except AttributeError:
-            continue
-        except IncompleteRead:
+        except:
             continue
