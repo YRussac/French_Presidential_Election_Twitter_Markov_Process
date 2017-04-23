@@ -66,7 +66,7 @@ def user_information(user_id, number_of_tweets=200):
 # Class used to stream Twitter incoming tweets
 class StdOutListener(StreamListener):
 
-    def __init__(self, time_limit=86400):
+    def __init__(self, time_limit=500):
         self.initial_time = time.time()
         self.time_limit = time_limit
 
@@ -118,8 +118,8 @@ if __name__ == '__main__':
         try:
             stream.filter(track=["#Macron2017", "#Hamon2017", "#Marine2017", "#Fillon2017", "#Arthaud2017",
                                  "#Lassalle2017", "#Cheminade2017", "#JLM2017", "#NDA2017", "#Asselineau2017",
-                                 "#Poutou2017"])
+                                 "#Poutou2017"], languages=['fr'])
         except AttributeError:
-            time.sleep(10)
+            continue
         except IncompleteRead:
-            time.sleep(5)
+            continue

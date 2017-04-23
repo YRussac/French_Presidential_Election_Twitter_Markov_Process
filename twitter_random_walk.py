@@ -61,13 +61,16 @@ else:
         undirected_graph = json.load(fp)
     fp.close()
 
+epsilon, pathological_nodes, number_of_return_times = graph_centrality(undirected_graph, 1, verbose=False)
 
-epsilon, pathological_nodes = graph_centrality(undirected_graph, 6000, verbose=False)
-
-with open('epsilon.json', 'w') as fp:
+with open('epsilon_test.json', 'w') as fp:
     json.dump(epsilon, fp)
 fp.close()
 
-with open('pathological_nodes.json', 'w') as fq:
+with open('pathological_nodes_test.json', 'w') as fq:
     json.dump(pathological_nodes, fq)
 fq.close()
+
+with open('number_of_return_times.json', 'w') as fr:
+    json.dump(number_of_return_times, fr)
+fr.close()

@@ -103,4 +103,4 @@ def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
         iteration += 1
         
     pathological_nodes = pathological_nodes_search(epsilon)
-    return epsilon, pathological_nodes
+    return epsilon, pathological_nodes, number_of_return_times
