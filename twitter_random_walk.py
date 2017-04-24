@@ -11,9 +11,18 @@ from centrality_functions import graph_centrality
 
 # If we have not created the graph corresponding to the tweets we fetched
 # Otherwise we load it
-if 'undirected_graph.json' not in os.listdir(os.getcwd()):
 
-    with open('seizeavril.txt', 'r') as lines:
+folders = ["seize_avril", "vingt_trois_avril_19_20", "vingt_trois_avril_21_24"]
+
+folder = folders[1]
+
+os.chdir(os.path.join(os.getcwd(), folder))
+
+Metropolis, PageRank = False, True
+
+if 'undirected_graph_{}.json'.format(folder) not in os.listdir(os.getcwd()):
+
+    with open('{}.txt'.format(folder), 'r') as lines:
         l = [line for line in lines]
     lines.close()
 
@@ -48,29 +57,56 @@ if 'undirected_graph.json' not in os.listdir(os.getcwd()):
     # components = connected_components(undirected_graph)
     # print([comp[1] for comp in components], sum([comp[1] for comp in components]), len(undirected_graph))
 
-    with open('id_to_name.json', 'w') as f:
+    with open('id_to_name_{}.json'.format(folder), 'w') as f:
         json.dump(id_to_name, f)
     f.close()
 
-    with open('undirected_graph.json', 'w') as fp:
+    with open('directed_graph_{}.json'.format(folder), 'w') as g:
+        json.dump(directed_graph, g)
+    g.close()
+
+    with open('undirected_graph_{}.json'.format(folder), 'w') as fp:
         json.dump(undirected_graph, fp)
     fp.close()
 
-else:
-    with open('undirected_graph.json', 'r') as fp:
+
+# Metropolis
+if Metropolis:
+    with open('undirected_graph_{}.json'.format(folder), 'r') as fp:
         undirected_graph = json.load(fp)
     fp.close()
 
-epsilon, pathological_nodes, number_of_return_times = graph_centrality(undirected_graph, 1, verbose=False)
+    epsilon, pathological_nodes, number_of_return_times = graph_centrality(undirected_graph, 5000, verbose=False)
 
-with open('epsilon_test.json', 'w') as fp:
-    json.dump(epsilon, fp)
-fp.close()
+    with open('epsilon_M_{}.json'.format(folder), 'w') as fp:
+        json.dump(epsilon, fp)
+    fp.close()
 
-with open('pathological_nodes_test.json', 'w') as fq:
-    json.dump(pathological_nodes, fq)
-fq.close()
+    with open('pathological_nodes_M_{}.json'.format(folder), 'w') as fq:
+        json.dump(pathological_nodes, fq)
+    fq.close()
 
-with open('number_of_return_times.json', 'w') as fr:
-    json.dump(number_of_return_times, fr)
-fr.close()
+    with open('number_of_return_times_M_{}.json'.format(folder), 'w') as fr:
+        json.dump(number_of_return_times, fr)
+    fr.close()
+
+# PageRank
+if PageRank:
+
+    with open('directed_graph_{}.json'.format(folder), 'r') as fp:
+        directed_graph = json.load(fp)
+    fp.close()
+
+    epsilon, pathological_nodes, number_of_return_times = graph_centrality(directed_graph, 5000, verbose=False, method="P")
+
+    with open('epsilon_P_{}.json'.format(folder), 'w') as fp:
+        json.dump(epsilon, fp)
+    fp.close()
+
+    with open('pathological_nodes_P_{}.json'.format(folder), 'w') as fq:
+        json.dump(pathological_nodes, fq)
+    fq.close()
+
+    with open('number_of_return_times_P_{}.json'.format(folder), 'w') as fr:
+        json.dump(number_of_return_times, fr)
+    fr.close()
