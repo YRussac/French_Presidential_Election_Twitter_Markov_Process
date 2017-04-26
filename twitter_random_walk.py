@@ -14,11 +14,11 @@ from centrality_functions import graph_centrality
 
 folders = ["seize_avril", "vingt_trois_avril_19_20", "vingt_trois_avril_21_24"]
 
-folder = folders[1]
+folder = folders[2]
 
 os.chdir(os.path.join(os.getcwd(), folder))
 
-Metropolis, PageRank = False, True
+Metropolis, PageRank = True, True
 
 if 'undirected_graph_{}.json'.format(folder) not in os.listdir(os.getcwd()):
 
@@ -39,6 +39,10 @@ if 'undirected_graph_{}.json'.format(folder) not in os.listdir(os.getcwd()):
 
     # Associates to each user the users he mentioned or was mentioned by
     directed_graph = {nodes_list[i]['id']: links(nodes_list, i, users_count) for i in range(0, len(nodes_list))}
+
+    with open('directed_graph_{}.json'.format(folder), 'w') as g:
+        json.dump(directed_graph, g)
+    g.close()
 
     # Transforms the directed graph into an undirected graph
     undirected_graph = directed_to_undirected(directed_graph)
@@ -61,10 +65,6 @@ if 'undirected_graph_{}.json'.format(folder) not in os.listdir(os.getcwd()):
         json.dump(id_to_name, f)
     f.close()
 
-    with open('directed_graph_{}.json'.format(folder), 'w') as g:
-        json.dump(directed_graph, g)
-    g.close()
-
     with open('undirected_graph_{}.json'.format(folder), 'w') as fp:
         json.dump(undirected_graph, fp)
     fp.close()
@@ -76,7 +76,7 @@ if Metropolis:
         undirected_graph = json.load(fp)
     fp.close()
 
-    epsilon, pathological_nodes, number_of_return_times = graph_centrality(undirected_graph, 5000, verbose=False)
+    epsilon, pathological_nodes, number_of_return_times = graph_centrality(undirected_graph, 1, verbose=False)
 
     with open('epsilon_M_{}.json'.format(folder), 'w') as fp:
         json.dump(epsilon, fp)

@@ -5,20 +5,6 @@ from random import uniform
 import datetime
 
 
-def enough_return_times(number_of_return_times, n, graph):
-    """
-
-    :param number_of_return_times:
-    :param n:
-    :param graph:
-    :return:
-    """
-    for key in number_of_return_times.keys():
-        if len(graph[key]) > 10 and number_of_return_times[key] < n:
-            return False
-    return True
-
-
 def pathological_nodes_search(epsilon):
     """
     Function to detect nodes that have less than 10 non-consecutives returns
@@ -58,9 +44,9 @@ def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
 
     iteration = 0
 
-    number_of_return_times = {node: 0 for node in graph.keys()}
+    number_of_return_times = {node: 0 for node in graph.keys() if len(graph[node]) > 10}
 
-    while not enough_return_times(number_of_return_times, n, graph):
+    while bool(number_of_return_times):
         if verbose:
             print('--------------')
             print('Location of the RW : ' + str(random_walk_loc))
@@ -75,7 +61,10 @@ def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
             epsilon[random_walk_loc] = epsilon[random_walk_loc][-1500:] + [(iteration - last_time_visited[random_walk_loc])]
             last_time_visited[random_walk_loc] = iteration
 
-        number_of_return_times[random_walk_loc] += 1
+        if random_walk_loc in number_of_return_times.keys():
+            number_of_return_times[random_walk_loc] += 1
+            if number_of_return_times[random_walk_loc] == 1500:
+                number_of_return_times.pop(random_walk_loc)
 
         # Neighbors of actual location node
         neighbors = graph[random_walk_loc]
