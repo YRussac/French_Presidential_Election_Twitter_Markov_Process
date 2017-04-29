@@ -3,15 +3,21 @@ import numpy as np
 import seaborn as sb
 import os
 
-hashtag_list = ["#Macron2017", "#Hamon2017", "#MLP2017", "#Fillon2017", "#JLM2017", "#Arthaud2017", "#Lassalle2017",
+hashtag_list = ["#Macron2017", "#Hamon2017", "#Marine2017", "#Fillon2017", "#JLM2017", "#Arthaud2017", "#Lassalle2017",
                 "#Cheminade2017", "#NDA2017", "#Asselineau2017", "#Poutou2017"]
 
 candidates_list = ['E. Macron', 'B. Hamon', 'M. Le Pen', 'F. Fillon', 'J.-L. Mélenchon', 'N. Arthaud', 'J. Lassalle',
                    'J. Cheminade', 'N. Dupont-Aignan', 'F. Asselineau', 'P. Poutou']
 
+folders = ["seize_avril", "vingt_trois_avril_19_20", "vingt_trois_avril_21_24"]
+
+folder = folders[0]
+
+os.chdir(folder)
+
 if 'Co_occurence_matrix.npy' not in os.listdir():
 
-    with open('seizeavril.txt', 'r') as lines:
+    with open('{}.txt'.format(folder), 'r') as lines:
         l = [line for line in lines]
     lines.close()
 
@@ -35,15 +41,13 @@ if 'Co_occurence_matrix.npy' not in os.listdir():
             for b in index:
                 co_occurence[a, b] += 1
 
-    print(co_occurence)
-
     np.save('Co_occurence_matrix', co_occurence)
 
 else:
     co_occurence = np.load('Co_occurence_matrix.npy')
 
 
-sb.heatmap(co_occurence, linewidths=.5, xticklabels=hashtag_list, yticklabels=candidates_list)
+sb.heatmap(co_occurence, robust=True, cmap="Blues", linewidths=.5, xticklabels=hashtag_list, yticklabels=candidates_list)
 sb.plt.xticks(rotation=70)
 sb.plt.yticks(rotation=0)
-sb.plt.savefig('Heatmap', dpi=400, transparent=True, bbox_inches='tight', pad_inches=0)
+sb.plt.savefig('Heatmap_{}'.format(folder), dpi=400, transparent=True, bbox_inches='tight', pad_inches=0)

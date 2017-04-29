@@ -93,3 +93,26 @@ def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
         
     pathological_nodes = pathological_nodes_search(epsilon)
     return epsilon, pathological_nodes, number_of_return_times
+
+
+def directed_centrality(directed_graph):
+    node_degree = {}
+    for node in directed_graph.keys():
+        for neighbor in directed_graph[node]:
+            if neighbor not in node_degree.keys():
+                node_degree[neighbor] = 1
+            else:
+                node_degree[neighbor] += 1
+    return node_degree
+
+if __name__ == '__main__':
+    import os
+    import json
+    folder = 'seize_avril'
+    os.chdir(folder)
+
+    with open('directed_graph_{}.json'.format(folder), 'r') as fp:
+        directed_graph = json.load(fp)
+    fp.close()
+
+    print(directed_centrality(directed_graph))
