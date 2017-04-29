@@ -96,6 +96,9 @@ def graph_centrality(graph, n, verbose=False, method="M", d=0.85):
 
 
 def directed_centrality(directed_graph):
+    """
+    Returns a dictionary. Keys of the dict are the nodes of the graph and their value is the in degree of the node
+    """
     node_degree = {}
     for node in directed_graph.keys():
         for neighbor in directed_graph[node]:
